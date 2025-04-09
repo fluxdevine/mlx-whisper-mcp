@@ -16,9 +16,11 @@ from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
 from rich.logging import RichHandler
+from rich.console import Console
+console = Console(stderr=True)
 
 logging.basicConfig(
-    level="NOTSET", format="%(message)s", datefmt="[%X]", handlers=[RichHandler()]
+    level="NOTSET", format="%(message)s", datefmt="[%X]", handlers=[RichHandler(console=console)]
 )
 
 log = logging.getLogger("whisper-mcp")
@@ -29,9 +31,7 @@ try:
 
     log.info("[green]Successfully imported mlx_whisper[/green]", extra={"markup": True})
 except ImportError:
-    raise ImportError(
-        "Error: MLX Whisper not installed. Install with 'uv pip install mlx-whisper'."
-    )
+    log.error("Error: MLX Whisper not installed. Install with 'uv pip install mlx-whisper'.")
 
 
 server = FastMCP("mlx-whisper")
@@ -65,6 +65,7 @@ async def transcribe_file(
 
     except Exception as e:
         log.error(f"Error transcribing audio file: {str(e)}")
+        return f"Error transcribing audio file: {str(e)}"
 
 
 @server.tool()
@@ -103,6 +104,7 @@ async def transcribe_audio(
 
     except Exception as e:
         log.error(f"Error transcribing audio: {str(e)}")
+        return f"Error transcribing audio: {str(e)}"
 
 
 if __name__ == "__main__":
