@@ -1,0 +1,17 @@
+[project]
+name = "whisper-mcp"
+version = "0.1.0"
+license = { text = "Apache License 2.0" }
+description = "Local MCP server for MLX Whisper transcription"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    {name = "Kachi Odoemene", email = "kachi.odoemene@gmail.com"},
+]
+keywords = ["mcp", "mlx", "whisper", "transcription", "claude"]
+dependencies = [
+    "mcp[cli]",
+    "mlx-whisper",
+    "rich",
+]
+
