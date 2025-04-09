@@ -40,18 +40,8 @@ code %APPDATA%\Claude\claude_desktop_config.json
 
 2. Add the MLX Whisper MCP server configuration:
 
-```json
-{
-  "mcpServers": {
-    "mlx-whisper": {
-      "command": "uv",
-      "args": [
-        "run",
-        "/absolute/path/to/mlx_whisper_mcp.py"
-      ]
-    }
-  }
-}
+```
+mcp install mlx_whisper_mcp.py 
 ```
 
 3. Restart Claude Desktop

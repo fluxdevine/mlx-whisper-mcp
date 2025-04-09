@@ -15,7 +15,6 @@ from pathlib import Path
 from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
-from rich.console import Console
 from rich.logging import RichHandler
 
 logging.basicConfig(
@@ -23,15 +22,13 @@ logging.basicConfig(
 )
 
 log = logging.getLogger("whisper-mcp")
-
-console = Console()
+log.setLevel(logging.INFO)
 
 try:
     import mlx_whisper
 
-    console.log("[green]Successfully imported mlx_whisper[/green]")
+    log.info("[green]Successfully imported mlx_whisper[/green]", extra={"markup": True})
 except ImportError:
-    console.log("[red]Failed to import mlx_whisper[/red]")
     raise ImportError(
         "Error: MLX Whisper not installed. Install with 'uv pip install mlx-whisper'."
     )
@@ -109,8 +106,8 @@ async def transcribe_audio(
 
 
 if __name__ == "__main__":
-    console.print("[bold green]Starting MLX Whisper MCP Server[/bold green]")
-    console.print(f"[yellow]Using model:[/yellow] {MODEL_PATH}")
+    log.info("[bold green]Starting MLX Whisper MCP Server[/bold green]", extra={"markup": True})
+    log.info(f"[yellow]Using model:[/yellow] {MODEL_PATH}", extra={"markup": True})
 
-    console.print("[bold]Running with stdio transport...[/bold]")
+    log.info("[bold]Running with stdio transport...[/bold]", extra={"markup": True})
     server.run(transport="stdio")
