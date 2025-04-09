@@ -54,6 +54,7 @@ code %APPDATA%\Claude\claude_desktop_config.json
     }
   }
 }
+```
 
 3. Restart Claude Desktop
 
