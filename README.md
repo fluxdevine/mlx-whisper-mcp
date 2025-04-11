@@ -6,9 +6,11 @@ A simple Model Context Protocol (MCP) server that provides audio transcription c
 
 - Transcribe audio files directly from disk
 - Transcribe audio from base64-encoded data
+- Download and transcribe YouTube videos
 - Uses the high-quality `mlx-community/whisper-large-v3-turbo` model
 - Self-contained script with automatic dependency management via `uv run`
 - Rich console output for easy debugging
+- Saves transcription text files alongside audio files
 
 ## Requirements
 
@@ -58,9 +60,10 @@ code %APPDATA%\Claude\claude_desktop_config.json
 
 3. Restart Claude Desktop
 
+
 ## Available Tools
 
-The server provides two main tools:
+The server provides the following tools:
 
 ### 1. `transcribe_file`
 
@@ -81,11 +84,51 @@ Parameters:
 - `file_format`: Audio file format (wav, mp3, etc.)
 - `task`: "transcribe" or "translate" (translates to English)
 
-## Example Prompts for Claude
+### 3. `download_youtube`
+
+Downloads a YouTube video.
+
+Parameters:
+- `url`: YouTube video URL
+- `keep_file`: If True, keeps the downloaded file (default: True)
+
+### 4. `transcribe_youtube`
+
+Downloads and transcribes a YouTube video.
+
+Parameters:
+- `url`: YouTube video URL
+- `language`: (Optional) Language code to force a specific language
+- `task`: "transcribe" or "translate" (translates to English)
+- `keep_file`: If True, keeps the downloaded file (default: True)
+
+## Example Prompts for Claude Desktop
 
 - "Transcribe the audio file at /Users/username/Desktop/recording.mp3"
 - "Translate this Spanish audio recording to English" (when uploading an audio file)
 - "What is being said in this recording?" (when uploading an audio file)
+- "Download and transcribe this YouTube video: https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+- "Download this YouTube video: https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+
+## How It Works
+
+This server uses the MCP Python SDK to expose MLX Whisper's transcription capabilities to clients like Claude. When a transcription is requested:
+
+1. The audio data is received (either as a file path, base64-encoded data, or YouTube URL)
+2. For YouTube URLs, the video is downloaded to `~/.mlx-whisper-mcp/downloads`
+3. For base64 data, a temporary file is created
+4. MLX Whisper is used to perform the transcription
+5. The transcription text is saved to a .txt file alongside the audio file
+6. The transcription text is returned to the client
+7. Temporary files are cleaned up (unless keep_file=True)
+
+## Troubleshooting
+
+- **Import Error**: If you see an error about MLX Whisper not being found, make sure you're running on an Apple Silicon Mac
+- **File Not Found**: Make sure you're using absolute paths when referencing audio files
+- **Memory Issues**: Very long audio files may cause memory pressure with the large model
+- **YouTube Download Errors**: Some videos may be restricted or require authentication
+- **JSON Errors**: If you see "not valid JSON" errors in logs, make sure server logging output is properly directed to stderr
 
 ## Troubleshooting
 
