@@ -130,22 +130,6 @@ This server uses the MCP Python SDK to expose MLX Whisper's transcription capabi
 - **YouTube Download Errors**: Some videos may be restricted or require authentication
 - **JSON Errors**: If you see "not valid JSON" errors in logs, make sure server logging output is properly directed to stderr
 
-## Troubleshooting
-
-- **Import Error**: If you see an error about MLX Whisper not being found, make sure you're running on an Apple Silicon Mac
-- **File Not Found**: Make sure you're using absolute paths when referencing audio files
-- **Memory Issues**: Very long audio files may cause memory pressure with the large model
-
-## How It Works
-
-This server uses the MCP Python SDK to expose MLX Whisper's transcription capabilities to clients like Claude. When a transcription is requested:
-
-1. The audio data is received (either as a file path or base64-encoded data)
-2. For base64 data, a temporary file is created
-3. MLX Whisper is used to perform the transcription
-4. The transcription text is returned to the client
-5. Temporary files are cleaned up
-
 ## License
 
 Apache License 2.0
