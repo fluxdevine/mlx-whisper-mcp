@@ -36,7 +36,7 @@ try:
 
     log.info("[green]Successfully imported mlx_whisper[/green]", extra={"markup": True})
 except ImportError:
-    log.error(
+    log.warning(
         "Error: MLX Whisper not installed. Install with 'uv pip install mlx-whisper'."
     )
 
@@ -45,10 +45,13 @@ try:
 
     log.info("[green]Successfully imported yt-dlp[/green]", extra={"markup": True})
 except ImportError:
-    log.error("Error: yt-dlp not installed. Install with 'uv pip install yt-dlp'.")
+    log.warning("Error: yt-dlp not installed. Install with 'uv pip install yt-dlp'.")
 
 
-server = FastMCP("mlx-whisper")
+server = FastMCP(
+    name = "mlx-whisper",
+    dependencies = ["mlx-whisper", "yt-dlp"]
+)
 
 MODEL_PATH = "mlx-community/whisper-large-v3-turbo"
 
@@ -81,11 +84,11 @@ async def transcribe_file(
 
         output_file = str(Path(file_path).with_suffix(".txt"))
         output_file = Path(DATA_DIR) / Path(output_file).name
-        
+
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(transcript)
         log.info(f"Saving transcript to: {output_file}")
-        
+
         return f"Transcription:\n\n{transcript}"
 
     except Exception as e:
