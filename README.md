@@ -27,38 +27,55 @@ uv run mlx_whisper_mcp.py
 ```
 
 That's it! The script will automatically install its own dependencies and start the MCP server.
+Note: The first time you run the script, it may take longer to start as it will download the Whisper model (approx. 1.6GB). Subsequent runs will be faster.
 
 ## Using with Claude Desktop
 
+There are two main ways to integrate this server with Claude Desktop:
+
+### Option 1: Using `uv` (Recommended)
+
+1.  Navigate to the directory where you've cloned or saved `mlx_whisper_mcp.py`.
+2.  Run the following command:
+    ```bash
+    uv tool run fastmcp install mlx_whisper_mcp.py
+    ```
+3.  Restart Claude Desktop if it was running. `fastmcp` will have set up the necessary configuration to launch the server, including handling its dependencies via `uv run`.
+
+### Option 2: Manual Configuration
+
+If you prefer to configure Claude Desktop manually:
+
 1. Edit your Claude Desktop configuration file:
 
-```bash
-# On macOS:
-code ~/Library/Application\ Support/Claude/claude_desktop_config.json
+   ```bash
+   # On macOS:
+   code ~/Library/Application\ Support/Claude/claude_desktop_config.json
 
-# On Windows:
-code %APPDATA%\Claude\claude_desktop_config.json
-```
+   # On Windows:
+   code %APPDATA%\Claude\claude_desktop_config.json
+   ```
 
-2. Add the MLX Whisper MCP server configuration:
+2. Add the MLX Whisper MCP server configuration.
+   **Important:** Replace `/absolute/path/to/mlx_whisper_mcp/` in the `cwd` field below with the actual absolute path to the directory containing `mlx_whisper_mcp.py` on your system.
 
-```json
-{
-  "mcpServers": {
-    "mlx-whisper": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/absolute/path/to/mlx_whisper_mcp/",
-        "run",
-        "mlx_whisper_mcp.py"
-      ]
-    }
-  }
-}
-```
+   ```json
+   {
+     "mcpServers": {
+       "mlx-whisper": {
+         "command": "uv",
+         "args": [
+           "run",
+           "mlx_whisper_mcp.py"
+         ],
+         "cwd": "/absolute/path/to/mlx_whisper_mcp/"
+       }
+     }
+   }
+   ```
+   This configuration tells Claude Desktop to execute `mlx_whisper_mcp.py` using `uv run`, with the current working directory (`cwd`) set to the script's location. `uv run` will handle installing the dependencies defined for the script.
 
-3. Restart Claude Desktop
+3. Restart Claude Desktop.
 
 
 ## Available Tools
